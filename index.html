@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Your Lifestyle</title>
+    <meta name="description" content="Premium lifestyle dashboard for daily routines, habits, and productivity.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">✦</div>
+                <div>
+                    <h2>Update</h2><span>YOUR LIFESTYLE</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-item active" id="nav-home">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" id="nav-habits">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                    <span>My Routine</span>
+                </button>
+                <button class="nav-item" id="nav-tasks">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    <span>Tasks</span>
+                </button>
+                <button class="nav-item" id="nav-coach">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>AI Coach</span>
+                </button>
+                <button class="nav-item" data-soon="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>Reminders</span>
+                </button>
+                <button class="nav-item" id="nav-analytics">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    <span>Analytics</span>
+                </button>
+                <button class="nav-item" data-soon="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>Calendar</span>
+                </button>
+                <button class="nav-item" id="nav-settings">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </nav>
+            <div class="sidebar-motivation">
+                <div class="motivation-img"></div>
+                <p>Discipline today<br>Freedom tomorrow.</p>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar-sm">U</div>
+                <div class="user-info">
+                    <strong>User</strong>
+                    <span>Level 12</span>
+                    <div class="level-bar">
+                        <div class="level-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-panel">
+            <header class="top-bar">
+                <div class="greeting">
+                    <h1 id="greeting-text">Good Morning, <strong>User!</strong> ☀️</h1>
+                    <p>Focus on improving yourself every day.</p>
+                </div>
+                <div class="top-actions">
+                    <div class="date-badge" id="current-date">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2"
+                            fill="none">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <span id="current-date-text">Loading...</span>
+                    </div>
+                    <button class="noti-btn" id="noti-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2"
+                            fill="none">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                        </svg>
+                    </button>
+                    <div class="user-avatar-top">U</div>
+                </div>
+            </header>
+
+            <!-- ===== HOME VIEW ===== -->
+            <div class="home-view" id="home-view">
+                <div class="dashboard-grid">
+                    <div class="grid-main">
+                        <!-- Today's Plan -->
+                        <section class="plan-section">
+                            <div class="section-header">
+                                <h2>Today's Plan</h2>
+                                <button class="view-all-btn" id="view-all-tasks">View All ⊞</button>
+                            </div>
+                            <div class="plan-cards-scroll">
+                                <div class="plan-cards" id="plan-cards"></div>
+                            </div>
+                        </section>
+                        <!-- Charts Row -->
+                        <div class="charts-row">
+                            <div class="card weekly-card">
+                                <div class="section-header">
+                                    <h3>Weekly Progress</h3><span class="badge-sm">This Week</span>
+                                </div>
+                                <div id="weekly-chart" class="chart-area"></div>
+                            </div>
+                            <div class="card activity-card">
+                                <h3>Activity Distribution</h3>
+                                <div id="donut-chart" class="chart-area"></div>
+                            </div>
+                        </div>
+                        <!-- Motivation Row -->
+                        <div class="motivation-row">
+                            <div class="card motivation-card-main">
+                                <div class="motiv-img"></div>
+                                <div class="motiv-text">
+                                    <h3>Stay Consistent</h3>
+                                    <p>Your future self is watching you right now.</p>
+                                    <button class="keep-going-btn">Keep Going 🚀</button>
+                                </div>
+                            </div>
+                            <div class="card streak-card">
+                                <h3>Current Streak</h3>
+                                <div class="streak-number">🔥 <span id="streak-count">0</span> Days</div>
+                                <p class="streak-sub">Keep it up! You're doing great.</p>
+                                <div class="week-dots" id="week-dots"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Sidebar -->
+                    <div class="grid-sidebar">
+                        <div class="quote-card">
+                            <span class="quote-mark">❝</span>
+                            <p id="quote-text">Small steps every day lead to big changes.</p>
+                            <span class="quote-author">— Unknown</span>
+                        </div>
+                        <div class="card progress-card">
+                            <h3>Daily Progress</h3>
+                            <div class="progress-content">
+                                <div class="ring-wrap">
+                                    <svg class="progress-ring" width="120" height="120" viewBox="0 0 120 120">
+                                        <circle class="progress-ring__bg" cx="60" cy="60" r="50" stroke-width="10"
+                                            fill="none" />
+                                        <circle class="progress-ring__circle" cx="60" cy="60" r="50" stroke-width="10"
+                                            fill="none" stroke-dasharray="314" stroke-dashoffset="314" />
+                                    </svg>
+                                    <div class="percent-display"><span
+                                            id="completion-text">0</span>%<small>Completed</small></div>
+                                </div>
+                                <div class="progress-stats">
+                                    <div class="p-stat"><span class="dot green"></span>Completed <strong
+                                            id="stat-completed">0</strong> Tasks</div>
+                                    <div class="p-stat"><span class="dot orange"></span>Pending <strong
+                                            id="stat-pending">0</strong> Tasks</div>
+                                    <div class="p-stat"><span class="dot gray"></span>Total <strong
+                                            id="stat-total">0</strong> Tasks</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card schedule-card">
+                            <h3>Today's Schedule</h3>
+                            <div class="schedule-list" id="schedule-list"></div>
+                            <button class="add-new-btn" id="add-task-shortcut">+ Add New Task</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TASKS VIEW ===== -->
+            <div class="tasks-section hidden-view" id="tasks-view">
+                <div class="section-header">
+                    <h2>Daily Tasks</h2>
+                    <div class="filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="pending">Pending</button>
+                        <button class="filter-btn" data-filter="completed">Done</button>
+                    </div>
+                </div>
+                <div class="add-task-container">
+                    <form id="add-task-form">
+                        <input type="text" id="task-input" placeholder="Add a new task..." required autocomplete="off">
+                        <input type="time" id="task-time" required>
+                        <button type="submit" class="btn-primary">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                fill="none">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                <div id="task-list" class="task-grid"></div>
+            </div>
+
+            <!-- ===== HABITS VIEW ===== -->
+            <div class="habits-section hidden-view" id="habits-view">
+                <div class="section-header">
+                    <h2>Daily Habits</h2>
+                    <span id="habits-today-count" class="badge-sm"></span>
+                </div>
+                <div class="card" style="margin-bottom:1.5rem;padding:1.5rem;">
+                    <h3 style="margin-bottom:1rem;">📊 This Week's Lifestyle Tracking</h3>
+                    <div id="habit-chart" class="habit-chart-container"></div>
+                </div>
+                <div class="add-task-container">
+                    <form id="add-habit-form">
+                        <input type="text" id="habit-input" placeholder="Add a new daily habit..." required
+                            autocomplete="off">
+                        <button type="submit" class="btn-primary">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                fill="none">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                <div id="habit-list" class="task-grid"></div>
+            </div>
+
+            <!-- ===== AI COACH VIEW ===== -->
+            <div class="coach-section hidden-view" id="coach-view">
+                <div class="section-header">
+                    <h2>🤖 AI Accountability Coach</h2>
+                    <span class="badge-sm" style="color:#10b981;">● Powered by Gemini AI</span>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message coach">
+                            <div class="msg-content">
+                                👋 <strong>Hey! I'm your AI Accountability Coach.</strong><br><br>
+                                I help you <strong>build better habits</strong>, stay on track, and crush your goals.
+                                <div class="quick-prompts" id="quick-prompts">
+                                    <button class="quick-prompt-btn"
+                                        data-prompt="How do I build a consistent morning routine?">🌅 Morning
+                                        routine</button>
+                                    <button class="quick-prompt-btn"
+                                        data-prompt="Give me a productivity plan for today">📋 Productivity
+                                        plan</button>
+                                    <button class="quick-prompt-btn"
+                                        data-prompt="How can I stay motivated when I feel lazy?">💪 Stay
+                                        motivated</button>
+                                    <button class="quick-prompt-btn"
+                                        data-prompt="What are 5 healthy habits I should build?">🧠 Healthy
+                                        habits</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="chat-input-area" id="chat-form">
+                        <input type="text" id="chat-input" placeholder="Ask your coach anything..." autocomplete="off">
+                        <button type="submit" class="btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ===== ANALYTICS VIEW ===== -->
+            <div class="analytics-section hidden-view" id="analytics-view">
+                <div class="section-header">
+                    <h2>Performance Analytics</h2>
+                    <span class="badge-sm">Last 30 Days</span>
+                </div>
+                <div class="dashboard-grid" style="grid-template-columns: 1fr; gap: 1.5rem;">
+                    <div class="charts-row" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                        <div class="card">
+                            <h3>Task Completion Rate</h3>
+                            <div class="chart-area" style="height: 150px; display:flex; align-items:flex-end; gap: 8px;">
+                                <div style="width: 15%; height: 40%; background: var(--primary-light); border-radius: 4px;"></div>
+                                <div style="width: 15%; height: 70%; background: var(--primary-light); border-radius: 4px;"></div>
+                                <div style="width: 15%; height: 50%; background: var(--primary-light); border-radius: 4px;"></div>
+                                <div style="width: 15%; height: 90%; background: var(--primary); border-radius: 4px;"></div>
+                                <div style="width: 15%; height: 60%; background: var(--primary-light); border-radius: 4px;"></div>
+                                <div style="width: 15%; height: 80%; background: var(--primary); border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Focus Distribution</h3>
+                            <div class="chart-area" style="height: 150px; display:flex; justify-content:center; align-items:center;">
+                                <div style="width: 120px; height: 120px; border-radius: 50%; border: 15px solid var(--primary); border-top-color: var(--success); border-right-color: var(--warning);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Productivity Insights</h3>
+                        <div style="display:flex; flex-direction:column; gap: 1rem; margin-top: 1rem;">
+                            <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); border-radius: var(--radius-sm);">
+                                <strong>Peak Productivity:</strong> You complete most of your tasks between 9 AM and 11 AM.
+                            </div>
+                            <div style="padding: 1rem; background: rgba(139, 92, 246, 0.1); border-left: 4px solid var(--primary); border-radius: var(--radius-sm);">
+                                <strong>Habit Consistency:</strong> Your workout habit is on a 5-day streak! Keep it up!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SETTINGS VIEW ===== -->
+            <div class="settings-section hidden-view" id="settings-view">
+                <div class="section-header">
+                    <h2>Settings</h2>
+                </div>
+                <div class="card" style="max-width: 600px; margin-bottom: 1.5rem;">
+                    <h3 style="margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border);">Preferences</h3>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem;">Dark Mode</strong>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Toggle dark/light theme</span>
+                        </div>
+                        <button class="btn-primary" id="theme-toggle" style="padding: 0.5rem 1rem;">Toggle Theme</button>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem;">Desktop Notifications</strong>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Get alerts for upcoming tasks</span>
+                        </div>
+                        <button class="btn-primary" id="noti-toggle" style="padding: 0.5rem 1rem; background: var(--card-border); color: var(--text);">Enable</button>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <strong style="display: block; margin-bottom: 0.5rem;">Daily Focus Goal (Tasks)</strong>
+                        <input type="number" value="5" style="width: 100px; padding: 0.5rem; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text); outline: none;">
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--card-border);">
+                        <div>
+                            <strong style="display: block; margin-bottom: 0.25rem; color: var(--danger);">Danger Zone</strong>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Erase all your data and habits</span>
+                        </div>
+                        <button class="btn-primary" style="background: var(--danger);" onclick="if(confirm('Are you sure you want to clear all data? This cannot be undone.')) { localStorage.clear(); window.location.reload(); }">Clear Data</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div class="toast-container" id="toast-container"></div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
