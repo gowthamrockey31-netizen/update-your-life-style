@@ -66,14 +66,23 @@
                     </svg>
                     <span>Analytics</span>
                 </button>
-                <button class="nav-item" data-soon="true">
+                <button class="nav-item" id="nav-focus">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                        <line x1="16" y1="2" x2="16" y2="6" />
-                        <line x1="8" y1="2" x2="8" y2="6" />
-                        <line x1="3" y1="10" x2="21" y2="10" />
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    <span>Calendar</span>
+                    <span>Focus</span>
+                </button>
+                <button class="nav-item" id="nav-body">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span>Body</span>
+                </button>
+                <button class="nav-item" id="nav-badges">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                    </svg>
+                    <span>Badges</span>
                 </button>
                 <button class="nav-item" id="nav-settings">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
@@ -107,6 +116,12 @@
                 <div class="greeting">
                     <h1 id="greeting-text">Good Morning, <strong>User!</strong> ☀️</h1>
                     <p>Focus on improving yourself every day.</p>
+                    <div class="quick-stats" id="quick-stats">
+                        <div class="quick-stat"><span class="qs-icon">📋</span> Tasks: <strong id="qs-tasks">0/0</strong></div>
+                        <div class="quick-stat"><span class="qs-icon">🔄</span> Habits: <strong id="qs-habits">0/0</strong></div>
+                        <div class="quick-stat"><span class="qs-icon fire-pulse">🔥</span> Streak: <strong id="qs-streak">0</strong></div>
+                        <div class="quick-stat"><span class="qs-icon">⚡</span> Level: <strong id="qs-level">1</strong></div>
+                    </div>
                 </div>
                 <div class="top-actions">
                     <div class="date-badge" id="current-date">
@@ -401,54 +416,135 @@
                 </div>
             </div>
 
+            <!-- ===== FOCUS TIMER VIEW ===== -->
+            <div class="focus-section hidden-view" id="focus-view">
+                <div class="section-header"><h2>⏱️ Focus Timer</h2><span class="badge-sm" id="focus-sessions-count">0 sessions today</span></div>
+                <div class="focus-grid">
+                    <div class="card focus-timer-card">
+                        <div class="focus-ring-wrap">
+                            <svg class="focus-ring" width="220" height="220" viewBox="0 0 220 220">
+                                <circle cx="110" cy="110" r="95" stroke-width="8" fill="none" stroke="rgba(127,119,221,.12)"/>
+                                <circle id="focus-ring-progress" cx="110" cy="110" r="95" stroke-width="8" fill="none" stroke="var(--primary)" stroke-linecap="round" stroke-dasharray="597" stroke-dashoffset="0" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .5s;"/>
+                            </svg>
+                            <div class="focus-time-display">
+                                <div id="focus-time" class="focus-time">25:00</div>
+                                <div id="focus-label" class="focus-label">FOCUS</div>
+                            </div>
+                        </div>
+                        <div class="focus-controls">
+                            <button class="btn-primary" id="focus-start" style="padding:.7rem 2rem;">▶ Start</button>
+                            <button class="btn-primary" id="focus-pause" style="padding:.7rem 1.5rem;background:var(--card-border);color:var(--text);display:none;">⏸ Pause</button>
+                            <button class="btn-primary" id="focus-reset" style="padding:.7rem 1.5rem;background:var(--coral);">↺ Reset</button>
+                        </div>
+                        <div class="focus-config">
+                            <label>Focus: <input type="number" id="focus-work-min" value="25" min="1" max="90" class="setting-input" style="width:60px;"> min</label>
+                            <label>Break: <input type="number" id="focus-break-min" value="5" min="1" max="30" class="setting-input" style="width:60px;"> min</label>
+                        </div>
+                    </div>
+                    <div class="card focus-info-card">
+                        <h3>🎵 Ambient Sound</h3>
+                        <div class="ambient-btns" id="ambient-btns">
+                            <button class="ambient-btn active" data-sound="silence">🔇 Silence</button>
+                            <button class="ambient-btn" data-sound="rain">🌧️ Rain</button>
+                            <button class="ambient-btn" data-sound="lofi">🎧 Lofi</button>
+                            <button class="ambient-btn" data-sound="white">🌬️ White Noise</button>
+                        </div>
+                        <h3 style="margin-top:1.5rem;">📊 Today's Sessions</h3>
+                        <div id="focus-session-log" style="margin-top:.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== BODY TRACKING VIEW ===== -->
+            <div class="body-section hidden-view" id="body-view">
+                <div class="section-header"><h2>💪 Body Tracker</h2><span class="badge-sm">Daily Wellness</span></div>
+                <div class="body-grid">
+                    <div class="card body-card">
+                        <div class="body-card-icon">💧</div>
+                        <h3>Water Intake</h3>
+                        <div class="water-cups" id="water-cups"></div>
+                        <div class="body-progress"><div class="body-progress-fill" id="water-fill" style="width:0%;"></div></div>
+                        <span class="body-stat" id="water-stat">0 / 8 cups</span>
+                    </div>
+                    <div class="card body-card">
+                        <div class="body-card-icon">😴</div>
+                        <h3>Sleep Hours</h3>
+                        <div class="sleep-input-row">
+                            <input type="number" id="sleep-hours" min="0" max="14" step="0.5" placeholder="Hours" class="setting-input" style="width:80px;">
+                            <button class="btn-primary btn-sm" id="log-sleep">Log</button>
+                        </div>
+                        <div class="sleep-quality" id="sleep-quality">
+                            <button class="quality-btn" data-q="1">1⭐</button>
+                            <button class="quality-btn" data-q="2">2⭐</button>
+                            <button class="quality-btn" data-q="3">3⭐</button>
+                            <button class="quality-btn" data-q="4">4⭐</button>
+                            <button class="quality-btn" data-q="5">5⭐</button>
+                        </div>
+                        <span class="body-stat" id="sleep-stat">No data today</span>
+                    </div>
+                    <div class="card body-card">
+                        <div class="body-card-icon">😊</div>
+                        <h3>Mood</h3>
+                        <div class="mood-picker" id="mood-picker">
+                            <button class="mood-btn" data-mood="1">😔</button>
+                            <button class="mood-btn" data-mood="2">😐</button>
+                            <button class="mood-btn" data-mood="3">🙂</button>
+                            <button class="mood-btn" data-mood="4">😄</button>
+                            <button class="mood-btn" data-mood="5">🤩</button>
+                        </div>
+                        <span class="body-stat" id="mood-stat">How are you feeling?</span>
+                    </div>
+                </div>
+                <div class="card" style="margin-top:1.5rem;">
+                    <h3>📈 Weekly Trends</h3>
+                    <div class="chartjs-container" style="height:200px;"><canvas id="body-trends-chart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- ===== BADGES VIEW ===== -->
+            <div class="badges-section hidden-view" id="badges-view">
+                <div class="section-header"><h2>🏆 Achievement Badges</h2><span class="badge-sm" id="badges-unlocked-count">0 unlocked</span></div>
+                <div class="badges-grid" id="badges-grid"></div>
+            </div>
+
             <!-- ===== SETTINGS VIEW ===== -->
             <div class="settings-section hidden-view" id="settings-view">
                 <div class="section-header">
-                    <h2>Settings</h2>
+                    <h2>⚙️ Settings</h2>
                 </div>
-                <div class="card" style="max-width: 600px; margin-bottom: 1.5rem;">
-                    <h3 style="margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border);">Profile</h3>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <div>
-                            <strong style="display: block; margin-bottom: 0.25rem;">Display Name</strong>
-                            <span style="font-size: 0.8rem; color: var(--text-muted);">Change your username</span>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:.5rem;">
-                            <input type="text" id="settings-name-input" placeholder="Your name" style="width: 160px; padding: 0.5rem; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text); outline: none; font-family:inherit;">
-                            <button class="btn-primary" id="settings-save-name" style="padding: 0.5rem 1rem;">Save</button>
-                        </div>
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-tab="account">👤 Account</button>
+                    <button class="settings-tab" data-tab="appearance">🎨 Appearance</button>
+                    <button class="settings-tab" data-tab="goals">🎯 Goals</button>
+                    <button class="settings-tab" data-tab="data">💾 Data</button>
+                </div>
+                <!-- Account Tab -->
+                <div class="settings-panel active" id="tab-account">
+                    <div class="card settings-card">
+                        <div class="setting-row"><div><strong>Display Name</strong><span>Change your username</span></div><div class="setting-action"><input type="text" id="settings-name-input" placeholder="Your name" class="setting-input"><button class="btn-primary btn-sm" id="settings-save-name">Save</button></div></div>
+                        <div class="setting-row"><div><strong>Avatar</strong><span>Your initials are used as avatar</span></div><div class="setting-action"><div class="user-avatar-sm" id="settings-avatar" style="width:48px;height:48px;font-size:1.1rem;">U</div></div></div>
                     </div>
-
-                    <h3 style="margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--card-border);">Preferences</h3>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <div>
-                            <strong style="display: block; margin-bottom: 0.25rem;">Dark Mode</strong>
-                            <span style="font-size: 0.8rem; color: var(--text-muted);">Toggle dark/light theme</span>
-                        </div>
-                        <button class="btn-primary" id="theme-toggle" style="padding: 0.5rem 1rem;">Toggle Theme</button>
+                </div>
+                <!-- Appearance Tab -->
+                <div class="settings-panel" id="tab-appearance">
+                    <div class="card settings-card">
+                        <div class="setting-row"><div><strong>Dark Mode</strong><span>Toggle dark/light theme</span></div><div class="setting-action"><button class="btn-primary btn-sm" id="theme-toggle">Toggle Theme</button></div></div>
+                        <div class="setting-row"><div><strong>Notifications</strong><span>Browser push notifications</span></div><div class="setting-action"><button class="btn-primary btn-sm" id="noti-toggle" style="background:var(--card-border);color:var(--text);">Enable</button></div></div>
                     </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <div>
-                            <strong style="display: block; margin-bottom: 0.25rem;">Desktop Notifications</strong>
-                            <span style="font-size: 0.8rem; color: var(--text-muted);">Get alerts for upcoming tasks</span>
-                        </div>
-                        <button class="btn-primary" id="noti-toggle" style="padding: 0.5rem 1rem; background: var(--card-border); color: var(--text);">Enable</button>
+                </div>
+                <!-- Goals Tab -->
+                <div class="settings-panel" id="tab-goals">
+                    <div class="card settings-card">
+                        <div class="setting-row"><div><strong>Daily Task Goal</strong><span>Number of tasks to aim for each day</span></div><div class="setting-action"><input type="number" id="settings-daily-goal" value="5" min="1" max="50" class="setting-input" style="width:80px;"></div></div>
+                        <div class="setting-row"><div><strong>Weekly Habit Target</strong><span>Minimum habits to complete weekly</span></div><div class="setting-action"><input type="number" id="settings-habit-target" value="3" min="1" max="20" class="setting-input" style="width:80px;"></div></div>
                     </div>
-
-                    <div style="margin-bottom: 1.5rem;">
-                        <strong style="display: block; margin-bottom: 0.5rem;">Daily Focus Goal (Tasks)</strong>
-                        <input type="number" value="5" style="width: 100px; padding: 0.5rem; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text); outline: none;">
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--card-border);">
-                        <div>
-                            <strong style="display: block; margin-bottom: 0.25rem; color: var(--danger);">Danger Zone</strong>
-                            <span style="font-size: 0.8rem; color: var(--text-muted);">Erase all your data and habits</span>
-                        </div>
-                        <button class="btn-primary" style="background: var(--danger);" onclick="if(confirm('Are you sure you want to clear all data? This cannot be undone.')) { localStorage.clear(); window.location.reload(); }">Clear Data</button>
+                </div>
+                <!-- Data Tab -->
+                <div class="settings-panel" id="tab-data">
+                    <div class="card settings-card">
+                        <div class="setting-row"><div><strong>Export Data</strong><span>Download all data as JSON backup</span></div><div class="setting-action"><button class="btn-primary btn-sm" id="export-data-btn" style="background:var(--info);">📥 Export</button></div></div>
+                        <div class="setting-row"><div><strong>Import Data</strong><span>Restore from a JSON backup file</span></div><div class="setting-action"><label class="btn-primary btn-sm" style="background:var(--teal);cursor:pointer;">📤 Import<input type="file" id="import-data-input" accept=".json" style="display:none;"></label></div></div>
+                        <div class="setting-row danger-row"><div><strong style="color:var(--danger);">⚠️ Clear All Data</strong><span>Permanently erase all your data</span></div><div class="setting-action"><button class="btn-primary btn-sm" id="clear-data-btn" style="background:var(--danger);">Clear Data</button></div></div>
                     </div>
                 </div>
             </div>
@@ -481,6 +577,7 @@
     </div>
 
     <div class="toast-container" id="toast-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 

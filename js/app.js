@@ -58,13 +58,21 @@ const elements = {
     habitsTodayCount: qs('#habits-today-count'),
     chatMessages: qs('#chat-messages'),
     chatForm: qs('#chat-form'),
-    chatInput: qs('#chat-input')
+    chatInput: qs('#chat-input'),
+    navFocus: qs('#nav-focus'),
+    navBody: qs('#nav-body'),
+    navBadges: qs('#nav-badges'),
+    focusSection: qs('#focus-view'),
+    bodySection: qs('#body-view'),
+    badgesSection: qs('#badges-view')
 };
 
 const GEMINI_API_KEY = "AIzaSyBECEutF7Pv8fLEsLoPtLVTQkQPpecJm7E";
 
 // Initialize App
 function init() {
+    // Apply saved theme
+    if (localStorage.getItem('lifestyle_theme') === 'dark') document.body.classList.add('dark-mode');
     setDate();
     renderTasks();
     updateDashboardUI();
@@ -74,6 +82,7 @@ function init() {
     updateAllUserNames();
     updateLevelUI();
     renderPuzzles();
+    updateQuickStats();
     
     // Event Listeners
     elements.form.addEventListener('submit', handleAddTask);
@@ -103,6 +112,9 @@ function init() {
     if (elements.navPuzzles) elements.navPuzzles.addEventListener('click', () => switchView('puzzles'));
     if (elements.navAnalytics) elements.navAnalytics.addEventListener('click', () => switchView('analytics'));
     if (elements.navSettings) elements.navSettings.addEventListener('click', () => switchView('settings'));
+    if (elements.navFocus) elements.navFocus.addEventListener('click', () => switchView('focus'));
+    if (elements.navBody) elements.navBody.addEventListener('click', () => switchView('body'));
+    if (elements.navBadges) elements.navBadges.addEventListener('click', () => switchView('badges'));
 
     // Name editing
     const sidebarName = qs('#sidebar-username');
@@ -130,6 +142,7 @@ function init() {
     if (themeBtn) {
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
+            localStorage.setItem('lifestyle_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
         });
     }
 
@@ -231,7 +244,7 @@ function handleTaskAction(e) {
 }
 
 function switchView(view) {
-    const views = ['home', 'tasks', 'habits', 'coach', 'puzzles', 'analytics', 'settings'];
+    const views = ['home', 'tasks', 'habits', 'coach', 'puzzles', 'analytics', 'settings', 'focus', 'body', 'badges'];
     views.forEach(v => {
         const el = elements['nav' + v.charAt(0).toUpperCase() + v.slice(1)];
         if(el) el.classList.remove('active');
@@ -244,6 +257,9 @@ function switchView(view) {
     if (elements.puzzlesSection) elements.puzzlesSection.classList.add('hidden-view');
     if (elements.analyticsSection) elements.analyticsSection.classList.add('hidden-view');
     if (elements.settingsSection) elements.settingsSection.classList.add('hidden-view');
+    if (elements.focusSection) elements.focusSection.classList.add('hidden-view');
+    if (elements.bodySection) elements.bodySection.classList.add('hidden-view');
+    if (elements.badgesSection) elements.badgesSection.classList.add('hidden-view');
 
     if (view === 'home') {
         if (elements.navHome) elements.navHome.classList.add('active');
@@ -267,6 +283,17 @@ function switchView(view) {
     } else if (view === 'settings') {
         if (elements.navSettings) elements.navSettings.classList.add('active');
         if (elements.settingsSection) elements.settingsSection.classList.remove('hidden-view');
+    } else if (view === 'focus') {
+        if (elements.navFocus) elements.navFocus.classList.add('active');
+        if (elements.focusSection) elements.focusSection.classList.remove('hidden-view');
+    } else if (view === 'body') {
+        if (elements.navBody) elements.navBody.classList.add('active');
+        if (elements.bodySection) elements.bodySection.classList.remove('hidden-view');
+        renderBodyView();
+    } else if (view === 'badges') {
+        if (elements.navBadges) elements.navBadges.classList.add('active');
+        if (elements.badgesSection) elements.badgesSection.classList.remove('hidden-view');
+        renderBadges();
     }
 }
 
@@ -296,7 +323,7 @@ function renderTasks() {
     if (filterMode === 'completed') filtered = filtered.filter(t => t.completed);
     
     if (filtered.length === 0) {
-        elements.taskList.innerHTML = `
+        elements.taskList.innerHTML = tasks.length === 0 ? getEmptyTasksHTML() : `
             <div style="grid-column: 1 / -1; text-align:center; padding: 2rem; color: var(--text-muted);">
                 No tasks found for this filter.
             </div>
@@ -359,6 +386,17 @@ function updateDashboardUI() {
     renderHomeDonutChart();
     renderHomeStreakDots();
     renderHomeSchedule();
+    updateQuickStats();
+}
+
+function updateQuickStats() {
+    const completed = tasks.filter(t => t.completed).length;
+    const todayStr = new Date().toDateString();
+    const habitsDone = habits.filter(h => h.lastCompleted === todayStr).length;
+    const qsT = qs('#qs-tasks'); if (qsT) qsT.textContent = completed + '/' + tasks.length;
+    const qsH = qs('#qs-habits'); if (qsH) qsH.textContent = habitsDone + '/' + habits.length;
+    const qsS = qs('#qs-streak'); if (qsS) qsS.textContent = qs('#streak-count')?.textContent || '0';
+    const qsL = qs('#qs-level'); if (qsL) qsL.textContent = getLevel();
 }
 
 function renderHomeWeeklyChart() {
@@ -975,6 +1013,8 @@ function addXP(amount) {
     updateLevelUI();
     showXPPopup('+' + amount + ' XP');
     if (getLevel() > oldLevel) showLevelUp(getLevel());
+    updateQuickStats();
+    if (typeof checkBadges === 'function') checkBadges();
 }
 function removeXP(amount) {
     userXP = Math.max(0, userXP - amount);
@@ -1163,50 +1203,52 @@ function renderAnalyticsScores() {
 function renderAnalyticsWeeklyChart() {
     const container = qs('#analytics-weekly-chart');
     if (!container) return;
+    // Use Chart.js if available
+    if (typeof Chart === 'undefined') return;
+    container.innerHTML = '<div class="chartjs-container"><canvas id="chartjs-weekly"></canvas></div>';
+    const canvas = qs('#chartjs-weekly');
+    if (!canvas) return;
     const days = []; const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     const today = new Date();
-    for (let i = 6; i >= 0; i--) { const d = new Date(today); d.setDate(today.getDate() - i); days.push({ label: dayNames[d.getDay()], dateStr: d.toDateString(), isToday: i === 0 }); }
-    const maxTasks = Math.max(tasks.length, 1);
-    const W = container.offsetWidth || 500; const H = 200;
-    const barW = Math.floor((W - 60) / 7);
-    let svg = '';
-    days.forEach((day, i) => {
-        const dayTasks = tasks.filter(t => { const d = new Date(t.createdAt); return d.toDateString() === day.dateStr; });
-        const doneTasks = dayTasks.filter(t => t.completed).length;
-        const totalDay = dayTasks.length || 0;
-        const pct = totalDay > 0 ? doneTasks / totalDay : 0;
-        const bh = Math.max(6, pct * 140);
-        const x = 30 + i * barW + barW * 0.15; const bw = barW * 0.7; const by = H - 35 - bh;
-        const fill = day.isToday ? 'var(--primary)' : (pct > 0 ? 'rgba(139,92,246,.4)' : 'rgba(139,92,246,.1)');
-        svg += `<rect x="${x}" y="${by}" width="${bw}" height="${bh}" rx="6" fill="${fill}"/>`;
-        svg += `<text x="${x+bw/2}" y="${H-15}" text-anchor="middle" font-size="11" fill="var(--text-muted)" font-weight="${day.isToday?700:400}" font-family="Inter">${day.label}</text>`;
-        if (pct > 0) svg += `<text x="${x+bw/2}" y="${by-6}" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="Inter">${Math.round(pct*100)}%</text>`;
+    const labels = []; const dataValues = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date(today); d.setDate(today.getDate() - i);
+        labels.push(dayNames[d.getDay()]);
+        const dateStr = d.toDateString();
+        const dayTasks = tasks.filter(t => { try { return new Date(t.createdAt).toDateString() === dateStr; } catch(e) { return false; } });
+        const done = dayTasks.filter(t => t.completed).length;
+        const total = dayTasks.length || 0;
+        dataValues.push(total > 0 ? Math.round((done / total) * 100) : 0);
+    }
+    new Chart(canvas, {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Completion %', data: dataValues, backgroundColor: dataValues.map((v,i) => i === 6 ? '#7F77DD' : 'rgba(127,119,221,0.3)'), borderRadius: 6, borderSkipped: false }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + '% done' } } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { callback: v => v + '%', font: { size: 10 } } }, x: { grid: { display: false }, ticks: { font: { size: 11, weight: 600 } } } } }
     });
-    container.innerHTML = `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">${svg}</svg>`;
 }
 
 function renderAnalyticsCategoryChart() {
     const container = qs('#analytics-category-chart');
     if (!container) return;
-    const categories = { '💪 Fitness':0, '📚 Study':0, '💻 Work':0, '🧘 Wellness':0, '🔧 Other':0 };
+    if (typeof Chart === 'undefined') return;
+    container.innerHTML = '<div class="chartjs-container"><canvas id="chartjs-category"></canvas></div>';
+    const canvas = qs('#chartjs-category');
+    if (!canvas) return;
+    const categories = { 'Fitness':0, 'Study':0, 'Work':0, 'Wellness':0, 'Other':0 };
     tasks.forEach(t => {
         const txt = t.text.toLowerCase();
-        if (txt.match(/gym|workout|exercise|run|walk|fitness/)) categories['💪 Fitness']++;
-        else if (txt.match(/study|read|book|learn|exam|class/)) categories['📚 Study']++;
-        else if (txt.match(/work|code|laptop|project|meeting/)) categories['💻 Work']++;
-        else if (txt.match(/meditat|yoga|water|sleep|health|calm/)) categories['🧘 Wellness']++;
-        else categories['🔧 Other']++;
+        if (txt.match(/gym|workout|exercise|run|walk|fitness/)) categories['Fitness']++;
+        else if (txt.match(/study|read|book|learn|exam|class/)) categories['Study']++;
+        else if (txt.match(/work|code|laptop|project|meeting/)) categories['Work']++;
+        else if (txt.match(/meditat|yoga|water|sleep|health|calm/)) categories['Wellness']++;
+        else categories['Other']++;
     });
-    const total = Math.max(tasks.length, 1);
-    const colors = ['#8b5cf6','#10b981','#3b82f6','#f59e0b','#64748b'];
-    let html = '<div style="display:flex;flex-direction:column;gap:.75rem;padding:.5rem 0;">';
-    Object.entries(categories).forEach(([cat, count], i) => {
-        const pct = Math.round((count / total) * 100);
-        html += `<div><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px;"><span style="font-weight:600;">${cat}</span><span style="color:var(--text-muted);">${count} tasks (${pct}%)</span></div>`;
-        html += `<div style="height:8px;background:rgba(0,0,0,.05);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${colors[i]};border-radius:4px;transition:width .6s ease;"></div></div></div>`;
+    const colors = ['#7F77DD','#1D9E75','#378ADD','#BA7517','#6B7280'];
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: { labels: Object.keys(categories), datasets: [{ data: Object.values(categories), backgroundColor: colors, borderWidth: 0, hoverOffset: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { padding: 12, font: { size: 11, weight: 600 }, usePointStyle: true, pointStyleWidth: 8 } }, tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' tasks' } } } }
     });
-    html += '</div>';
-    container.innerHTML = html;
 }
 
 function renderAnalyticsHeatmap() {
@@ -1267,5 +1309,351 @@ function renderAnalyticsXPTimeline() {
     container.innerHTML = html;
 }
 
+// ===== FOCUS TIMER =====
+let focusInterval = null;
+let focusRemaining = 25 * 60;
+let focusIsBreak = false;
+let focusSessions = JSON.parse(localStorage.getItem('lifestyle_focus_sessions')) || [];
+
+function initFocusTimer() {
+    const startBtn = qs('#focus-start');
+    const pauseBtn = qs('#focus-pause');
+    const resetBtn = qs('#focus-reset');
+    if (startBtn) startBtn.addEventListener('click', startFocus);
+    if (pauseBtn) pauseBtn.addEventListener('click', pauseFocus);
+    if (resetBtn) resetBtn.addEventListener('click', resetFocus);
+    // Ambient
+    qsa('.ambient-btn').forEach(btn => btn.addEventListener('click', () => {
+        qsa('.ambient-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }));
+    updateFocusDisplay();
+    renderFocusSessions();
+}
+
+function startFocus() {
+    if (focusInterval) return;
+    const workMin = parseInt(qs('#focus-work-min')?.value) || 25;
+    if (focusRemaining <= 0) focusRemaining = workMin * 60;
+    qs('#focus-start').style.display = 'none';
+    qs('#focus-pause').style.display = 'flex';
+    focusInterval = setInterval(() => {
+        focusRemaining--;
+        updateFocusDisplay();
+        if (focusRemaining <= 0) {
+            clearInterval(focusInterval); focusInterval = null;
+            if (!focusIsBreak) {
+                // Completed focus session
+                focusSessions.push({ time: new Date().toISOString(), duration: parseInt(qs('#focus-work-min')?.value) || 25 });
+                localStorage.setItem('lifestyle_focus_sessions', JSON.stringify(focusSessions));
+                addXP(25);
+                showNotification('🎉 Focus Complete!', '+25 XP earned. Time for a break!');
+                renderFocusSessions();
+                focusIsBreak = true;
+                focusRemaining = (parseInt(qs('#focus-break-min')?.value) || 5) * 60;
+                qs('#focus-label').textContent = 'BREAK';
+                startFocus();
+            } else {
+                focusIsBreak = false;
+                focusRemaining = (parseInt(qs('#focus-work-min')?.value) || 25) * 60;
+                qs('#focus-label').textContent = 'FOCUS';
+                qs('#focus-start').style.display = 'flex';
+                qs('#focus-pause').style.display = 'none';
+                showNotification('⏰ Break Over!', 'Ready for another focus session?');
+            }
+            updateFocusDisplay();
+        }
+    }, 1000);
+}
+
+function pauseFocus() {
+    clearInterval(focusInterval); focusInterval = null;
+    qs('#focus-start').style.display = 'flex';
+    qs('#focus-pause').style.display = 'none';
+}
+
+function resetFocus() {
+    clearInterval(focusInterval); focusInterval = null;
+    focusIsBreak = false;
+    focusRemaining = (parseInt(qs('#focus-work-min')?.value) || 25) * 60;
+    qs('#focus-label').textContent = 'FOCUS';
+    qs('#focus-start').style.display = 'flex';
+    qs('#focus-pause').style.display = 'none';
+    updateFocusDisplay();
+}
+
+function updateFocusDisplay() {
+    const m = Math.floor(focusRemaining / 60);
+    const s = focusRemaining % 60;
+    const disp = qs('#focus-time');
+    if (disp) disp.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    const ring = qs('#focus-ring-progress');
+    if (ring) {
+        const totalSec = focusIsBreak ? (parseInt(qs('#focus-break-min')?.value) || 5) * 60 : (parseInt(qs('#focus-work-min')?.value) || 25) * 60;
+        const pct = focusRemaining / totalSec;
+        ring.style.strokeDashoffset = 597 * (1 - pct);
+    }
+    const sc = qs('#focus-sessions-count');
+    const todaySessions = focusSessions.filter(s => new Date(s.time).toDateString() === new Date().toDateString());
+    if (sc) sc.textContent = todaySessions.length + ' sessions today';
+}
+
+function renderFocusSessions() {
+    const container = qs('#focus-session-log');
+    if (!container) return;
+    const today = focusSessions.filter(s => new Date(s.time).toDateString() === new Date().toDateString());
+    if (today.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:.8rem;">No sessions yet today</div>'; return; }
+    container.innerHTML = today.map((s, i) => `<div class="focus-session-item">🟢 Session ${i+1} — ${s.duration} min <span style="margin-left:auto;color:var(--text-muted);font-size:.7rem;">${new Date(s.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></div>`).join('');
+}
+
+// ===== BODY TRACKING =====
+let bodyLog = JSON.parse(localStorage.getItem('lifestyle_body_log')) || {};
+
+function getBodyToday() {
+    const key = new Date().toDateString();
+    if (!bodyLog[key]) bodyLog[key] = { water: 0, sleep: null, sleepQuality: null, mood: null };
+    return bodyLog[key];
+}
+
+function saveBodyLog() { localStorage.setItem('lifestyle_body_log', JSON.stringify(bodyLog)); }
+
+function initBodyTracking() {
+    // Water cups
+    qs('#water-cups')?.addEventListener('click', (e) => {
+        const cup = e.target.closest('.water-cup');
+        if (!cup) return;
+        const idx = parseInt(cup.dataset.idx);
+        const today = getBodyToday();
+        today.water = today.water === idx + 1 ? idx : idx + 1;
+        saveBodyLog(); renderBodyView();
+    });
+    // Sleep
+    qs('#log-sleep')?.addEventListener('click', () => {
+        const val = parseFloat(qs('#sleep-hours')?.value);
+        if (val >= 0 && val <= 14) { getBodyToday().sleep = val; saveBodyLog(); renderBodyView(); }
+    });
+    // Sleep quality
+    qs('#sleep-quality')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.quality-btn');
+        if (!btn) return;
+        getBodyToday().sleepQuality = parseInt(btn.dataset.q);
+        saveBodyLog(); renderBodyView();
+    });
+    // Mood
+    qs('#mood-picker')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.mood-btn');
+        if (!btn) return;
+        getBodyToday().mood = parseInt(btn.dataset.mood);
+        saveBodyLog(); renderBodyView();
+    });
+}
+
+function renderBodyView() {
+    const today = getBodyToday();
+    // Water
+    const wc = qs('#water-cups');
+    if (wc) { let h = ''; for (let i = 0; i < 8; i++) h += `<div class="water-cup ${i < today.water ? 'filled' : ''}" data-idx="${i}">💧</div>`; wc.innerHTML = h; }
+    const wf = qs('#water-fill'); if (wf) wf.style.width = (today.water / 8 * 100) + '%';
+    const ws = qs('#water-stat'); if (ws) ws.textContent = today.water + ' / 8 cups';
+    // Sleep
+    const ss = qs('#sleep-stat');
+    if (ss) ss.textContent = today.sleep !== null ? today.sleep + 'h sleep' + (today.sleepQuality ? ' • ' + today.sleepQuality + '⭐' : '') : 'No data today';
+    qsa('.quality-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.q) === today.sleepQuality));
+    // Mood
+    const moods = ['','😔','😐','🙂','😄','🤩'];
+    const ms = qs('#mood-stat'); if (ms) ms.textContent = today.mood ? 'Feeling: ' + moods[today.mood] : 'How are you feeling?';
+    qsa('.mood-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.mood) === today.mood));
+    // Chart
+    renderBodyChart();
+}
+
+function renderBodyChart() {
+    const canvas = qs('#body-trends-chart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    const labels = []; const waterData = []; const sleepData = []; const moodData = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const key = d.toDateString();
+        labels.push(['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]);
+        const log = bodyLog[key] || {};
+        waterData.push(log.water || 0);
+        sleepData.push(log.sleep || 0);
+        moodData.push(log.mood || 0);
+    }
+    if (canvas._chart) canvas._chart.destroy();
+    canvas._chart = new Chart(canvas, {
+        type: 'line',
+        data: { labels, datasets: [
+            { label: 'Water', data: waterData, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,.1)', tension: .4, fill: true },
+            { label: 'Sleep', data: sleepData, borderColor: '#7F77DD', backgroundColor: 'rgba(127,119,221,.1)', tension: .4, fill: true },
+            { label: 'Mood', data: moodData, borderColor: '#BA7517', backgroundColor: 'rgba(186,117,23,.1)', tension: .4, fill: true }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 10, font: { size: 10 }, usePointStyle: true } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.04)' } }, x: { grid: { display: false } } } }
+    });
+}
+
+// ===== ACHIEVEMENT BADGES =====
+const BADGES = [
+    { id:'streak3', icon:'🔥', name:'Warming Up', desc:'3-day habit streak', check: () => habits.some(h => h.streak >= 3) },
+    { id:'streak7', icon:'🔥', name:'On Fire', desc:'7-day habit streak', check: () => habits.some(h => h.streak >= 7) },
+    { id:'streak30', icon:'🌟', name:'Unstoppable', desc:'30-day habit streak', check: () => habits.some(h => h.streak >= 30) },
+    { id:'tasks10', icon:'✅', name:'Task Starter', desc:'Complete 10 tasks', check: () => tasks.filter(t=>t.completed).length >= 10 },
+    { id:'tasks50', icon:'✅', name:'Half Century', desc:'Complete 50 tasks', check: () => tasks.filter(t=>t.completed).length >= 50 },
+    { id:'tasks100', icon:'🏅', name:'Century', desc:'Complete 100 tasks', check: () => tasks.filter(t=>t.completed).length >= 100 },
+    { id:'puzzle3', icon:'🧩', name:'Puzzle Lover', desc:'Solve 3 puzzles', check: () => solvedPuzzles.length >= 3 },
+    { id:'puzzle10', icon:'🧩', name:'Puzzle Master', desc:'Solve 10 puzzles', check: () => solvedPuzzles.length >= 10 },
+    { id:'level5', icon:'⭐', name:'Rising Star', desc:'Reach Level 5', check: () => getLevel() >= 5 },
+    { id:'level10', icon:'🏆', name:'Champion', desc:'Reach Level 10', check: () => getLevel() >= 10 },
+    { id:'level20', icon:'👑', name:'Legend', desc:'Reach Level 20', check: () => getLevel() >= 20 },
+    { id:'xp500', icon:'⚡', name:'XP Hunter', desc:'Earn 500 XP', check: () => userXP >= 500 },
+    { id:'xp2000', icon:'💎', name:'XP Legend', desc:'Earn 2000 XP', check: () => userXP >= 2000 },
+    { id:'water7', icon:'💧', name:'Hydrated', desc:'7 days water goal met', check: () => { let c=0; Object.values(bodyLog).forEach(d=>{if(d.water>=8)c++;}); return c>=7; } },
+    { id:'sleep7', icon:'😴', name:'Well Rested', desc:'Log sleep 7 days', check: () => { let c=0; Object.values(bodyLog).forEach(d=>{if(d.sleep)c++;}); return c>=7; } },
+    { id:'mood7', icon:'😊', name:'Self Aware', desc:'Log mood 7 days', check: () => { let c=0; Object.values(bodyLog).forEach(d=>{if(d.mood)c++;}); return c>=7; } },
+    { id:'focus5', icon:'🎯', name:'Deep Focus', desc:'Complete 5 focus sessions', check: () => focusSessions.length >= 5 },
+    { id:'focus25', icon:'🧠', name:'Focus Master', desc:'Complete 25 focus sessions', check: () => focusSessions.length >= 25 },
+    { id:'allhabits', icon:'💪', name:'Perfect Day', desc:'Complete all habits in one day', check: () => { const t=new Date().toDateString(); return habits.length > 0 && habits.every(h=>h.lastCompleted===t); } },
+    { id:'firsttask', icon:'🎉', name:'First Step', desc:'Complete your first task', check: () => tasks.some(t=>t.completed) }
+];
+
+let unlockedBadges = JSON.parse(localStorage.getItem('lifestyle_badges')) || [];
+
+function checkBadges() {
+    let newUnlocks = false;
+    BADGES.forEach(badge => {
+        if (!unlockedBadges.includes(badge.id) && badge.check()) {
+            unlockedBadges.push(badge.id);
+            newUnlocks = true;
+            showNotification('🏆 Badge Unlocked!', badge.name + ' — ' + badge.desc);
+        }
+    });
+    if (newUnlocks) localStorage.setItem('lifestyle_badges', JSON.stringify(unlockedBadges));
+}
+
+function renderBadges() {
+    const container = qs('#badges-grid');
+    if (!container) return;
+    checkBadges();
+    const countEl = qs('#badges-unlocked-count');
+    if (countEl) countEl.textContent = unlockedBadges.length + ' / ' + BADGES.length + ' unlocked';
+    container.innerHTML = BADGES.map(b => {
+        const unlocked = unlockedBadges.includes(b.id);
+        return `<div class="badge-card ${unlocked ? 'unlocked' : 'locked'}"><div class="badge-icon">${unlocked ? b.icon : '🔒'}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;
+    }).join('');
+}
+
+// ===== SETTINGS TABS =====
+function initSettingsTabs() {
+    qsa('.settings-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            qsa('.settings-tab').forEach(t => t.classList.remove('active'));
+            qsa('.settings-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            const panel = qs('#tab-' + tab.dataset.tab);
+            if (panel) panel.classList.add('active');
+        });
+    });
+    // Export
+    const exportBtn = qs('#export-data-btn');
+    if (exportBtn) exportBtn.addEventListener('click', exportAllData);
+    // Import
+    const importInput = qs('#import-data-input');
+    if (importInput) importInput.addEventListener('change', importAllData);
+    // Clear
+    const clearBtn = qs('#clear-data-btn');
+    if (clearBtn) clearBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear ALL data? This cannot be undone.')) {
+            localStorage.clear();
+            window.location.reload();
+        }
+    });
+    // Avatar sync
+    const sa = qs('#settings-avatar');
+    if (sa) sa.textContent = userName.charAt(0).toUpperCase();
+}
+
+function exportAllData() {
+    const data = {
+        version: 2,
+        exportedAt: new Date().toISOString(),
+        tasks, habits, userName, userXP, solvedPuzzles, currentPuzzleIndex,
+        theme: localStorage.getItem('lifestyle_theme') || 'light'
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'lifestyle-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click(); URL.revokeObjectURL(url);
+    showNotification('📥 Export Complete', 'Your data has been downloaded as JSON.');
+}
+
+function importAllData(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (!data.tasks || !data.habits) throw new Error('Invalid format');
+            if (confirm('This will replace all your current data. Continue?')) {
+                tasks = data.tasks; habits = data.habits;
+                userName = data.userName || 'User';
+                userXP = data.userXP || 0;
+                solvedPuzzles = data.solvedPuzzles || [];
+                currentPuzzleIndex = data.currentPuzzleIndex || 0;
+                localStorage.setItem('lifestyle_tasks', JSON.stringify(tasks));
+                localStorage.setItem('lifestyle_habits', JSON.stringify(habits));
+                localStorage.setItem('lifestyle_username', userName);
+                localStorage.setItem('lifestyle_xp', userXP);
+                localStorage.setItem('lifestyle_solved_puzzles', JSON.stringify(solvedPuzzles));
+                localStorage.setItem('lifestyle_puzzle_index', currentPuzzleIndex);
+                if (data.theme) localStorage.setItem('lifestyle_theme', data.theme);
+                window.location.reload();
+            }
+        } catch (err) {
+            showNotification('❌ Import Failed', 'Invalid JSON file. Please check the format.');
+        }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+// ===== EMPTY STATES =====
+function getEmptyTasksHTML() {
+    return `<div class="empty-state" style="grid-column:1/-1;">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="25" width="80" height="70" rx="8" stroke="var(--primary)" stroke-width="2" opacity=".3"/>
+            <line x1="35" y1="50" x2="85" y2="50" stroke="var(--primary)" stroke-width="2" opacity=".2" stroke-linecap="round"/>
+            <line x1="35" y1="62" x2="75" y2="62" stroke="var(--primary)" stroke-width="2" opacity=".2" stroke-linecap="round"/>
+            <line x1="35" y1="74" x2="65" y2="74" stroke="var(--primary)" stroke-width="2" opacity=".2" stroke-linecap="round"/>
+            <circle cx="30" cy="50" r="3" fill="var(--primary)" opacity=".3"/>
+            <circle cx="30" cy="62" r="3" fill="var(--primary)" opacity=".3"/>
+            <circle cx="30" cy="74" r="3" fill="var(--primary)" opacity=".3"/>
+            <path d="M60 15 L65 25 L55 25Z" fill="var(--primary)" opacity=".2"/>
+        </svg>
+        <h3>No tasks yet</h3>
+        <p>Start your productive day by adding your first task above!</p>
+        <button class="btn-primary" onclick="switchView('tasks')">+ Add Your First Task</button>
+    </div>`;
+}
+
+function getEmptyHabitsHTML() {
+    return `<div class="empty-state" style="grid-column:1/-1;">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="55" r="35" stroke="var(--teal)" stroke-width="2" opacity=".3"/>
+            <path d="M45 55 L55 65 L75 45" stroke="var(--teal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".4"/>
+            <circle cx="60" cy="55" r="20" stroke="var(--teal)" stroke-width="1.5" opacity=".15" stroke-dasharray="4 4"/>
+        </svg>
+        <h3>Build your routine</h3>
+        <p>Add daily habits to track your consistency and build streaks!</p>
+    </div>`;
+}
+
 // Start app
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+    initSettingsTabs();
+    initFocusTimer();
+    initBodyTracking();
+    checkBadges();
+});
