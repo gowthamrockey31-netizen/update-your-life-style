@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Your Lifestyle - Plan. Focus. Act. Grow.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Update Your Lifestyle — Upgrade Your Daily Productivity</title>
+    <meta name="description" content="Track habits, complete tasks, and improve your daily productivity with a premium futuristic dashboard. Plan. Focus. Act. Grow.">
     <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
@@ -15,10 +15,12 @@
                 <span class="logo-icon">✦</span>
                 <span>Update <em>Your Lifestyle</em></span>
             </a>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link active">🏠 Home</a>
-                <a href="#about" class="nav-link">ℹ️ About Us</a>
-                <a href="#contact" class="nav-link">📩 Contact Us</a>
+            <div class="nav-links" id="nav-links">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#dashboard-preview" class="nav-link">Dashboard</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
             </div>
             <a href="dashboard.html" class="nav-cta">Open Dashboard →</a>
             <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -37,8 +39,7 @@
         </div>
         <div class="hero-content">
             <div class="logo-emblem">
-                <svg viewBox="0 0 200 200" width="180" height="180" class="logo-svg">
-                    <!-- Gradient ring -->
+                <svg viewBox="0 0 200 200" width="170" height="170" class="logo-svg">
                     <defs>
                         <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#a855f7"/>
@@ -49,28 +50,27 @@
                             <stop offset="0%" stop-color="#22c55e"/>
                             <stop offset="100%" stop-color="#10b981"/>
                         </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
                     </defs>
-                    <!-- Ring -->
-                    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#ringGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="400 134"/>
-                    <!-- Person figure -->
-                    <circle cx="100" cy="72" r="10" fill="white"/>
-                    <path d="M100 85 L80 120 M100 85 L120 120 M100 85 L100 115 M85 105 L115 105" stroke="white" stroke-width="4" stroke-linecap="round" fill="none"/>
-                    <!-- Leaf -->
-                    <path d="M65 95 Q55 70 70 60 Q80 75 65 95Z" fill="url(#leafGrad)"/>
-                    <!-- Bars -->
-                    <rect x="120" y="90" width="8" height="25" rx="3" fill="#a855f7"/>
-                    <rect x="132" y="80" width="8" height="35" rx="3" fill="#8b5cf6"/>
-                    <rect x="144" y="70" width="8" height="45" rx="3" fill="#7c3aed"/>
-                    <!-- Star -->
-                    <polygon points="152,25 155,35 165,35 157,42 160,52 152,45 144,52 147,42 139,35 149,35" fill="#fbbf24"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#ringGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="400 134" filter="url(#glow)"/>
+                    <circle cx="100" cy="72" r="10" fill="white" opacity=".9"/>
+                    <path d="M100 85 L80 120 M100 85 L120 120 M100 85 L100 115 M85 105 L115 105" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".9"/>
+                    <path d="M65 95 Q55 70 70 60 Q80 75 65 95Z" fill="url(#leafGrad)" opacity=".85"/>
+                    <rect x="120" y="90" width="7" height="25" rx="3" fill="#a855f7" opacity=".8"/>
+                    <rect x="131" y="80" width="7" height="35" rx="3" fill="#8b5cf6" opacity=".8"/>
+                    <rect x="142" y="70" width="7" height="45" rx="3" fill="#7c3aed" opacity=".8"/>
+                    <polygon points="152,25 155,35 165,35 157,42 160,52 152,45 144,52 147,42 139,35 149,35" fill="#fbbf24" opacity=".85"/>
                 </svg>
             </div>
             <h1 class="hero-title">
                 <span class="gradient-text typewriter" id="hero-typed"></span>
                 <span class="subtitle anim-slide-up" style="animation-delay:.8s">— YOUR LIFESTYLE —</span>
             </h1>
-            <p class="hero-desc anim-slide-up" style="animation-delay:1s">Transform your daily routine into a path of growth. Track habits, crush goals, and become the best version of yourself.</p>
-            <div class="hero-pillars">
+            <p class="hero-desc anim-slide-up" style="animation-delay:1s">Track habits, complete tasks, and improve your daily productivity. Build the best version of yourself with a premium, AI-powered dashboard.</p>
+            <div class="hero-pillars anim-slide-up" style="animation-delay:1.2s">
                 <div class="pillar"><span>📅</span> Plan</div>
                 <div class="pillar-divider">|</div>
                 <div class="pillar"><span>🎯</span> Focus</div>
@@ -81,7 +81,7 @@
             </div>
             <div class="hero-buttons anim-slide-up" style="animation-delay:1.4s">
                 <a href="dashboard.html" class="btn-hero btn-glow">Get Started 🚀</a>
-                <a href="#about" class="btn-hero-outline">Learn More</a>
+                <a href="#dashboard-preview" class="btn-hero-outline">Explore Dashboard</a>
             </div>
         </div>
     </section>
@@ -89,26 +89,77 @@
     <!-- Features Section -->
     <section class="features" id="features">
         <h2 class="section-title">Why Choose <span class="gradient-text">Update?</span></h2>
+        <p class="section-subtitle">Everything you need to transform your daily routine into a path of growth and productivity.</p>
         <div class="features-grid" id="features-grid">
             <div class="feature-card">
-                <div class="feature-icon" style="background:rgba(139,92,246,.15);color:#a855f7;">📋</div>
-                <h3>Smart Task Management</h3>
-                <p>Add, organize, and track your daily tasks with beautiful image-based cards and progress indicators.</p>
+                <div class="feature-icon" style="background:rgba(139,92,246,.12);color:#a855f7;">📋</div>
+                <h3>Smart Task Manager</h3>
+                <p>Add, organize, and track your daily tasks with beautiful image-based cards and real-time progress indicators.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon" style="background:rgba(16,185,129,.15);color:#10b981;">🔥</div>
+                <div class="feature-icon" style="background:rgba(16,185,129,.12);color:#10b981;">🔥</div>
                 <h3>Habit Streak Tracking</h3>
-                <p>Build consistent habits with streak counters, weekly charts, and visual progress tracking.</p>
+                <p>Build consistent habits with streak counters, weekly charts, and visual progress tracking that keeps you motivated.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon" style="background:rgba(59,130,246,.15);color:#3b82f6;">🤖</div>
-                <h3>AI Accountability Coach</h3>
-                <p>Get personalized advice from your Gemini-powered AI coach to stay motivated and on track.</p>
+                <div class="feature-icon" style="background:rgba(59,130,246,.12);color:#3b82f6;">⏱️</div>
+                <h3>Pomodoro Focus Timer</h3>
+                <p>Stay in the zone with customizable focus sessions, ambient sounds, and detailed session tracking.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon" style="background:rgba(245,158,11,.15);color:#f59e0b;">📊</div>
+                <div class="feature-icon" style="background:rgba(245,158,11,.12);color:#f59e0b;">📊</div>
                 <h3>Visual Analytics</h3>
-                <p>See your progress with beautiful charts, activity distribution, and weekly performance graphs.</p>
+                <p>See your progress with beautiful animated charts, heatmaps, weekly performance graphs, and smart insights.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(236,72,153,.12);color:#ec4899;">💪</div>
+                <h3>Body & Wellness</h3>
+                <p>Track water intake, sleep quality, mood, and monitor your overall wellness trends throughout the week.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(6,182,212,.12);color:#06b6d4;">🤖</div>
+                <h3>AI Coach</h3>
+                <p>Get personalized motivation and productivity advice from your AI-powered accountability coach.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(168,85,247,.12);color:#a855f7;">🏆</div>
+                <h3>Achievement Badges</h3>
+                <p>Earn XP, level up, and unlock achievement badges as you complete tasks and build habits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(34,197,94,.12);color:#22c55e;">📝</div>
+                <h3>Notes & Reminders</h3>
+                <p>Capture thoughts with quick notes, set reminders, and never miss an important task or deadline.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section class="dashboard-preview" id="dashboard-preview">
+        <h2 class="section-title">Your Dashboard <span class="gradient-text">at a Glance</span></h2>
+        <p class="section-subtitle">A powerful command center for your daily life, beautifully designed and incredibly productive.</p>
+        <div class="preview-container">
+            <div class="preview-stats" id="preview-stats">
+                <div class="preview-stat">
+                    <span class="preview-stat-icon">📋</span>
+                    <span class="preview-stat-value" data-target="12">0</span>
+                    <span class="preview-stat-label">Daily Tasks</span>
+                </div>
+                <div class="preview-stat">
+                    <span class="preview-stat-icon">🔥</span>
+                    <span class="preview-stat-value" data-target="21">0</span>
+                    <span class="preview-stat-label">Day Streak</span>
+                </div>
+                <div class="preview-stat">
+                    <span class="preview-stat-icon">🏆</span>
+                    <span class="preview-stat-value" data-target="8">0</span>
+                    <span class="preview-stat-label">Badges Earned</span>
+                </div>
+                <div class="preview-stat">
+                    <span class="preview-stat-icon">⚡</span>
+                    <span class="preview-stat-value" data-target="94">0</span>
+                    <span class="preview-stat-label">Productivity %</span>
+                </div>
             </div>
         </div>
     </section>
@@ -122,14 +173,14 @@
             <div class="about-stats" id="about-stats">
                 <div class="about-stat"><strong data-count="10000">0</strong><span>Active Users</span></div>
                 <div class="about-stat"><strong data-count="50000">0</strong><span>Tasks Completed</span></div>
-                <div class="about-stat"><strong data-count="98">0</strong><span>Satisfaction</span></div>
+                <div class="about-stat"><strong data-count="98">0</strong><span>Satisfaction %</span></div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
     <section class="contact" id="contact">
-        <h2 class="section-title">Contact <span class="gradient-text">Us</span></h2>
+        <h2 class="section-title">Get In <span class="gradient-text">Touch</span></h2>
         <p class="contact-desc">Have questions or feedback? We'd love to hear from you!</p>
         <form class="contact-form" id="contact-form">
             <div class="form-row">
@@ -149,7 +200,8 @@
             </div>
             <p>Plan. Focus. Act. Grow. — © 2025 All rights reserved.</p>
             <div class="footer-links">
-                <a href="index.html">Home</a>
+                <a href="#hero">Home</a>
+                <a href="#features">Features</a>
                 <a href="#about">About</a>
                 <a href="#contact">Contact</a>
             </div>
@@ -157,64 +209,204 @@
     </footer>
 
     <script>
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-        a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});});
+    // ===== Smooth Scroll =====
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            e.preventDefault();
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Close mobile menu
+                document.getElementById('hamburger').classList.remove('active');
+                document.getElementById('nav-links').classList.remove('open');
+            }
+        });
     });
-    // Navbar
-    window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50));
-    // Hamburger
-    document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('active');document.querySelector('.nav-links').classList.toggle('open');});
-    // Contact
-    document.getElementById('contact-form').addEventListener('submit',e=>{e.preventDefault();alert('Thank you! Message sent.');e.target.reset();});
 
-    // Typing effect
-    const typed=document.getElementById('hero-typed');
-    const word='Update';let ci=0;
-    function typeChar(){if(ci<word.length){typed.textContent+=word[ci];ci++;setTimeout(typeChar,120);}else{typed.classList.add('typed-done');}}
-    setTimeout(typeChar,400);
+    // ===== Navbar Scroll Effect =====
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        navbar.classList.toggle('scrolled', window.scrollY > 40);
+        
+        // Update active nav link based on scroll position
+        const sections = ['hero', 'features', 'dashboard-preview', 'about', 'contact'];
+        const scrollPos = window.scrollY + 200;
+        sections.forEach(id => {
+            const section = document.getElementById(id);
+            if (section && scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
+                if (activeLink) activeLink.classList.add('active');
+            }
+        });
+    });
 
-    // Scroll observer for fade-in
-    const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
-    document.querySelectorAll('.feature-card,.about-content,.contact-form,.about-stat').forEach(el=>{el.classList.add('fade-observe');obs.observe(el);});
+    // ===== Hamburger Menu =====
+    document.getElementById('hamburger').addEventListener('click', function() {
+        this.classList.toggle('active');
+        document.getElementById('nav-links').classList.toggle('open');
+    });
+
+    // ===== Contact Form =====
+    document.getElementById('contact-form').addEventListener('submit', e => {
+        e.preventDefault();
+        alert('Thank you! Your message has been sent.');
+        e.target.reset();
+    });
+
+    // ===== Typing Effect =====
+    const typed = document.getElementById('hero-typed');
+    const word = 'Upgrade';
+    let ci = 0;
+    function typeChar() {
+        if (ci < word.length) {
+            typed.textContent += word[ci];
+            ci++;
+            setTimeout(typeChar, 100);
+        } else {
+            typed.classList.add('typed-done');
+        }
+    }
+    setTimeout(typeChar, 500);
+
+    // ===== Scroll Reveal (Intersection Observer) =====
+    const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.feature-card, .about-content, .contact-form, .about-stat, .preview-stat, .preview-container').forEach(el => {
+        el.classList.add('fade-observe');
+        revealObserver.observe(el);
+    });
 
     // Stagger feature cards
-    document.querySelectorAll('.feature-card').forEach((c,i)=>c.style.transitionDelay=i*0.15+'s');
+    document.querySelectorAll('.feature-card').forEach((c, i) => {
+        c.style.transitionDelay = i * 0.08 + 's';
+    });
 
-    // Counter animation
-    let counted=false;
-    const statsObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&!counted){counted=true;
-        document.querySelectorAll('[data-count]').forEach(el=>{
-            const target=parseInt(el.dataset.count);const suffix=target>=1000?(target===98?'%':'+'):(target===98?'%':'+');
-            const fmt=target>=10000?'K+':target===98?'%':'+';
-            let current=0;const step=Math.ceil(target/60);
-            const timer=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(timer);}
-                el.textContent=target>=10000?Math.floor(current/1000)+'K+':current+(target===98?'%':'+');
-            },30);
+    // ===== About Counter Animation =====
+    let aboutCounted = false;
+    const aboutObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting && !aboutCounted) {
+                aboutCounted = true;
+                document.querySelectorAll('[data-count]').forEach(el => {
+                    const target = parseInt(el.dataset.count);
+                    let current = 0;
+                    const step = Math.ceil(target / 50);
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) { current = target; clearInterval(timer); }
+                        el.textContent = target >= 10000 ? Math.floor(current / 1000) + 'K+' : current + (target === 98 ? '%' : '+');
+                    }, 35);
+                });
+            }
         });
-    }});},{threshold:.3});
-    statsObs.observe(document.getElementById('about-stats'));
+    }, { threshold: .3 });
+    aboutObs.observe(document.getElementById('about-stats'));
 
-    // Particles
-    const canvas=document.getElementById('particles');const ctx=canvas.getContext('2d');
-    let W,H;function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-    resize();window.addEventListener('resize',resize);
-    const pts=[];for(let i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+.5,dx:(Math.random()-.5)*.4,dy:(Math.random()-.5)*.4,o:Math.random()*.5+.2});
-    function drawParticles(){
-        ctx.clearRect(0,0,W,H);
-        pts.forEach(p=>{
-            p.x+=p.dx;p.y+=p.dy;
-            if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-            ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(139,92,246,${p.o})`;ctx.fill();
+    // ===== Dashboard Preview Counter Animation =====
+    let previewCounted = false;
+    const previewObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting && !previewCounted) {
+                previewCounted = true;
+                document.querySelectorAll('[data-target]').forEach(el => {
+                    const target = parseInt(el.dataset.target);
+                    let current = 0;
+                    const step = Math.max(1, Math.ceil(target / 40));
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) { current = target; clearInterval(timer); }
+                        el.textContent = current;
+                    }, 40);
+                });
+            }
         });
-        // Connect nearby particles
-        for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
-            const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-            if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(139,92,246,${.08*(1-d/120)})`;ctx.stroke();}
-        }
-        requestAnimationFrame(drawParticles);
+    }, { threshold: .3 });
+    previewObs.observe(document.getElementById('preview-stats'));
+
+    // ===== Particle System (Optimized) =====
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    function resizeCanvas() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
     }
-    drawParticles();
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Fewer particles for performance
+    const particles = [];
+    const PARTICLE_COUNT = Math.min(45, Math.floor(window.innerWidth / 30));
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.8 + .4,
+            dx: (Math.random() - .5) * .35,
+            dy: (Math.random() - .5) * .35,
+            o: Math.random() * .4 + .15
+        });
+    }
+
+    let animFrame;
+    function drawParticles() {
+        ctx.clearRect(0, 0, W, H);
+        
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < 0) p.x = W;
+            if (p.x > W) p.x = 0;
+            if (p.y < 0) p.y = H;
+            if (p.y > H) p.y = 0;
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(168, 85, 247, ${p.o})`;
+            ctx.fill();
+        }
+        
+        // Connect nearby particles (limited for performance)
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const d = dx * dx + dy * dy;
+                if (d < 14400) { // 120px squared
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(168, 85, 247, ${0.06 * (1 - Math.sqrt(d) / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        animFrame = requestAnimationFrame(drawParticles);
+    }
+    
+    // Only animate when hero is visible
+    const heroObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                if (!animFrame) drawParticles();
+            } else {
+                cancelAnimationFrame(animFrame);
+                animFrame = null;
+            }
+        });
+    }, { threshold: 0 });
+    heroObs.observe(document.getElementById('hero'));
     </script>
 </body>
 </html>

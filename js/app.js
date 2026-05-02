@@ -71,8 +71,8 @@ const GEMINI_API_KEY = "AIzaSyBECEutF7Pv8fLEsLoPtLVTQkQPpecJm7E";
 
 // Initialize App
 function init() {
-    // Apply saved theme
-    if (localStorage.getItem('lifestyle_theme') === 'dark') document.body.classList.add('dark-mode');
+    // Apply saved theme (dark is default, light-mode is the toggle)
+    if (localStorage.getItem('lifestyle_theme') === 'light') document.body.classList.add('light-mode');
     setDate();
     renderTasks();
     updateDashboardUI();
@@ -141,8 +141,8 @@ function init() {
     const themeBtn = qs('#theme-toggle');
     if (themeBtn) {
         themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('lifestyle_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('lifestyle_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
         });
     }
 
@@ -542,21 +542,15 @@ function escapeHTML(str) {
 // Theme
 function applyTheme() {
     const savedTheme = localStorage.getItem('lifestyle_theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        elements.themeIcon.textContent = '☀️';
-        elements.themeText.textContent = 'Light Mode';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
     }
 }
 
 function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    
-    localStorage.setItem('lifestyle_theme', isDark ? 'dark' : 'light');
-    elements.themeIcon.textContent = isDark ? '☀️' : '🌙';
-    elements.themeText.textContent = isDark ? 'Light Mode' : 'Dark Mode';
-    // No need to redraw chart, CSS handles theme colors natively on SVG
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    localStorage.setItem('lifestyle_theme', isLight ? 'light' : 'dark');
 }
 
 // Notifications
